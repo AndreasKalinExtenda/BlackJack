@@ -18,7 +18,7 @@ public class Deck {
         suits[3] = new Suit("Spades");
     }
 
-    public Static Denomination[] initializeDenomination() {
+    public static Denomination[] initializeDenominations() {
         Denomination[] denominations = new Denomination[13];
         denominations[] = new Denomination("LowAce", 1);
         denominations[] = new Denomination("HighAce", 11);

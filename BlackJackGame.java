@@ -1,5 +1,8 @@
 public class BlackJackGame {
-    public statis void main(String[] args) {
+    public static void main(String[] args) {
         Suit[] suits = initializeSuits();
+    }
+    public static void main(String[] args) {
+        Denomination[] denominations = initializeDenominations();
     }
 }
