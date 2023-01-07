@@ -1,13 +1,10 @@
-public class Deck {
+import java.util.Random;
+public class PlayingCards {
     String suit;
     Int denomination;
 
     public String getSuit() {
         return suit;
-    }
-
-    public Int getDenomination() {
-        return denomination;
     }
 
     public static Suit[] initializeSuits() {
@@ -18,10 +15,14 @@ public class Deck {
         suits[3] = new Suit("Spades");
     }
 
+    public Int getDenomination() {
+        return denomination;
+    }
+
     public static Denomination[] initializeDenominations() {
         Denomination[] denominations = new Denomination[13];
         denominations[] = new Denomination("LowAce", 1);
-        denominations[] = new Denomination("HighAce", 11);
+        //denominations[] = new Denomination("HighAce", 11);
         denominations[] = new Denomination("Two", 2);
         denominations[] = new Denomination("Three", 3);
         denominations[] = new Denomination("Four", 4);
@@ -35,4 +36,5 @@ public class Deck {
         denominations[] = new Denomination("Queen", 10);
         denominations[] = new Denomination("King", 10);
     }
+
 }
