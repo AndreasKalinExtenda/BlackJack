@@ -33,7 +33,7 @@ public enum Denomination {
 }
 
 public class Deck {
-    private List<Card> cards;
+    public List<Card> cards;
     public Deck() {
         this.cards = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -58,12 +58,12 @@ public class Deck {
         return this.cards;
     }
     public void printDeck() {
-        // Shuffle the list of cards
-
-
         // Print the shuffled list of cards
         for (Card card : this.cards) {
             System.out.println(card.getDenomination() + " of " + card.getSuit());
+        }
+        if (this.cards.size() != 208) {
+            System.out.println("Error: Deck does not contain 208 cards!");
         }
     }
 }
