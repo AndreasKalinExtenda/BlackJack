@@ -14,14 +14,13 @@ public class BlackJackGame {
             System.out.println("Invalid number of hands. Enter a number between 1 and 7:");
             numHands = scanner.nextInt();
         }
-        //numHands = numHands+1;
-        //System.out.println("Number of hands: " + hands.size());
+        // to add the dealer hand to numHands
+        numHands = numHands+1;
 
         MainGame game = new MainGame(numHands, cards);
         game.startGame();
     }
 }
-
 public class Card {
 
     private Suit suit;
@@ -109,7 +108,6 @@ public enum Denomination {
         return value;
     }
 }
-
 public enum Suit {
     CLUBS,
     DIAMONDS,
@@ -150,6 +148,10 @@ public class Player {
         this.cards.add(card);
     }
 
+    public void hit(Card card) {
+        this.cards.add(card);
+    }
+
     public List<Card> getCards() {
         return this.cards;
     }
@@ -170,7 +172,6 @@ public class Player {
         }
     }
 }
-
 public class BlackjackScoreCalculator {
     public static int calculateScore(List<Card> hand) {
         int score = 0;
@@ -224,6 +225,7 @@ public class BlackjackScoreCalculator {
 }
 public class MainGame {
     private int numHands;
+    int cardIndex = 0;
     private List<Card> cards;
 
     public MainGame(int numHands, List<Card> cards) {
@@ -231,13 +233,15 @@ public class MainGame {
         this.cards = cards;
     }
 
+    public Card getCard() {
+        Card card = this.cards.get(cardIndex);
+        cardIndex++;
+        return card;
+    }
+
     public void startGame() {
         Scanner scanner = new Scanner(System.in);
         Card card;
-        //numHands++;
-        int cardIndex = 0;
-        //int cardHandIndex = 0;
-        //List<List<Card>> hands = new ArrayList<>();
         List<List<Card>> playerHands = new ArrayList<>();
         for (int i = 0; i < numHands; i++) {
             playerHands.add(new ArrayList<>());
@@ -245,104 +249,99 @@ public class MainGame {
         Dealer dealer = new Dealer("BOT Dealer");
         Player player = new Player("AndyPuff");
 
-        System.out.println("The value of numHands in the numHand is " + numHands);
+        Card[][] dealtCards = new Card[numHands][21];
+        cardIndex = 0;
 
-        if (numHands == 1) {
-            card = cards.get(cardIndex);
+        // Two loops that deals the cards to number of combined hands for the dealer and the player
+        for (int i = 0; i < numHands; i++) {
+            card = getCard(); // method to get the next card
             dealer.dealCard(card);
-            cardIndex++;
-            card = cards.get(cardIndex);
-            player.dealCard(card);
-            cardIndex++;
-            card = cards.get(cardIndex);
-            dealer.dealCard(card);
-            cardIndex++;
-            card = cards.get(cardIndex);
-            player.dealCard(card);
-            cardIndex++;
-        }
-        // This works but gives the players hands the cards in the incorrect order
-        int nrCards = 0;
-        while (nrCards < numHands) {
-            nrCards++;
-            card = cards.get(cardIndex);
-            dealer.dealCard(card);
-            cardIndex++;
-            for (int i = 0; i < numHands; i++) {
-                card = cards.get(cardIndex);
-                player.dealCard(card);
-                cardIndex++;
-            }
-        }
-
-
-
-
-        //Hide this print out as its hiding the second card of the dealer. Right now i want it to be shown for debug reasons
-        /*System.out.println("BOT Dealer has been dealt:");
-        Card firstCard = dealer.getCards().get(0);
-        int dealerScore = BlackjackScoreCalculator.calculateScore(dealer.getCards());
-        System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + "\t" + "\t" + "BOT Dealer has " + dealerScore + " points");
-        System.out.println("[Hidden Card]");*/
-
-        /*System.out.println("BOT Dealer has been dealt:");
-        Card firstCard = hands.get(0).get(0);
-        int dealerScore = BlackjackScoreCalculator.calculateScore(hands.get(0));
-        System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + "\t" + "\t" + "BOT Dealer has " + dealerScore + " points");
-        System.out.println("[Hidden Card]");
-        */
-
-        System.out.print("BOT Dealer has been dealt: " + "\n");
-        Card firstCard = dealer.getCards().get(0);
-        Card secondCard = dealer.getCards().get(1);
-        int dealerScore = BlackjackScoreCalculator.calculateScore(dealer.getCards());
-        System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + ", " + secondCard.getDenomination() + " of " + secondCard.getSuit() + "\t" + "\t" + "BOT Dealer has " + dealerScore + " points");
-
-        /*if (player.getCards().size() < numHands * 2) {
-            System.out.println("Error: Not enough cards to play " + numHands + " hands!");
-            return;
-        }*/
-
-        System.out.println("AndyPuff has been dealt " + numHands + " hands:");
-        for (int i = 0; i < numHands * 2; i += 2) {
-            Card card1 = player.getCards().get(i);
-            Card card2 = player.getCards().get(i + 1);
-            int playerScore = BlackjackScoreCalculator.calculateScore(player.getCards());
-            if (playerScore == 21) {
-                System.out.println(card1.getDenomination() + " of " + card1.getSuit() + ", " + card2.getDenomination() + " of " + card2.getSuit() + "\t" + "\t" + "Blackjack for AndyPuff");
-                break;
-            } else
-                System.out.println(card1.getDenomination() + " of " + card1.getSuit() + ", " + card2.getDenomination() + " of " + card2.getSuit() + "\t" + "\t" + "AndyPuff has " + playerScore + " points");
+            dealtCards[i][0] = card;
         }
         for (int i = 0; i < numHands; i++) {
+            card = getCard(); // method to get the next card
+            dealer.dealCard(card);
+            dealtCards[i][1] = card;
+        }
+
+        int handNumber = 0;
+        for (int i = 0; i < numHands; i++) {
+            if (i == 0) {
+                System.out.print("BOT Dealer has been dealt: " + "\n");
+                Card firstCard = dealtCards[handNumber][0];
+                System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + ", [Hidden card]");
+            } else {
+                System.out.print("AndyPuff has been dealt: " + "\n");
+                Card firstCard = dealtCards[handNumber][0];
+                Card secondCard = dealtCards[handNumber][1];
+                List<Card> currentHand = Arrays.asList(firstCard, secondCard);
+
+                int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
+                if (playerScore == 21) {
+                    System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + ", " + secondCard.getDenomination() + " of " + secondCard.getSuit() + "\t" + "\t" + "Blackjack for AndyPuff");
+                } else {
+                    boolean hasAce = false;
+                    for (Card currentCard : currentHand) {
+                        if (currentCard.getDenomination() == Denomination.ACE) {
+                            hasAce = true;
+                        }
+                    }
+                    if (hasAce) {
+                        System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + ", " + secondCard.getDenomination() + " of " + secondCard.getSuit() + "\t" + "\t" + "AndyPuff has soft " + playerScore + " points");
+                    } else {
+                        System.out.println(firstCard.getDenomination() + " of " + firstCard.getSuit() + ", " + secondCard.getDenomination() + " of " + secondCard.getSuit() + "\t" + "\t" + "AndyPuff has " + playerScore + " points");
+                    }
+                }
+            }
+            handNumber++;
+        }
+        /*
+        scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("AndyPuff, do you want to hit or stand? (h/s)");
+            String choice = scanner.nextLine();
+            if (choice.equals("h")) {
+                for (int i = 1; i < numHands; i++) {
+                    card = getCard(); // method to get the next card
+                    dealer.dealCard(card);
+                    dealtCards[i][2] = card;
+                    //int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
+
+                }
+            } else if (choice.equals("s")) {
+                break;
+            }
+        }*/
+
+        /*
+        for (int i = 0; i < numHands; i++) {
+            List<Card> currentHand = new ArrayList<Card>();
+            currentHand.add(dealtCards[i][0]);
+            currentHand.add(dealtCards[i][1]);
             while (true) {
-                card = cards.get(cardIndex); // gets the first card in the list
-                //player.hit(card);
-                cards.remove(1); // removes the card from the list
                 System.out.println("AndyPuff, do you want to hit or stand? (h/s)");
                 String choice = scanner.nextLine();
                 if (choice.equals("h")) {
-                    cardIndex++;
-                    int playerScore = BlackjackScoreCalculator.calculateScore(player.getCards());
-                    if (playerScore < 21) {
-                        System.out.println("AndyPuff has been dealt the " + card.getDenomination() + " of " + card.getSuit());
-                        System.out.println("AndyPuff has been dealt a new card. AndyPuff has " + playerScore + " points");
-                    }
-                    if (playerScore == 21) {
-                        System.out.println("AndyPuff has been dealt the " + card.getDenomination() + " of " + card.getSuit());
-                        System.out.println("AndyPuff has been dealt a new card. AndyPuff has " + playerScore + " points");
-                        break;
-                    }
+                    card = cards.get(cardIndex);
+                    currentHand.add(card);
+                    int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
+                    System.out.println("AndyPuff has been dealt the " + card.getDenomination() + " of " + card.getSuit());
+                    System.out.println("AndyPuff has " + playerScore + " points");
                     if (playerScore > 21) {
-                        System.out.println("AndyPuff has been dealt the " + card.getDenomination() + " of " + card.getSuit());
                         System.out.println("AndyPuff has busted.");
                         break;
                     }
-                } else if (choice.equals("s")) {
+                    else if(playerScore == 21)
+                    {
+                        break;
+                    }
+                    cardIndex++;
+                }
+                else if (choice.equals("s")) {
                     break;
                 }
             }
-        }
+        }*/
     }
 }
 
