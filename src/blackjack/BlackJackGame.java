@@ -274,7 +274,10 @@ public class MainGame {
                 System.out.print("AndyPuff has been dealt: " + "\n");
                 Card firstCard = dealtCards[handNumber][0];
                 Card secondCard = dealtCards[handNumber][1];
-                List<Card> currentHand = Arrays.asList(firstCard, secondCard);
+                List<Card> currentHand = new ArrayList<>();
+                currentHand.add(firstCard);
+                currentHand.add(secondCard);
+                //System.out.println("The current hand is: " + currentHand);
 
                 int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
                 if (playerScore == 21) {
@@ -295,53 +298,28 @@ public class MainGame {
             }
             handNumber++;
         }
-        /*
+        System.out.println("The handnumber is: " + handNumber);
+        handNumber=1;
         scanner = new Scanner(System.in);
+        List<Card> currentHand = new ArrayList<>();
+        currentHand.add(dealtCards[handNumber][0]);
+        currentHand.add(dealtCards[handNumber][1]);
         while (true) {
             System.out.println("AndyPuff, do you want to hit or stand? (h/s)");
             String choice = scanner.nextLine();
             if (choice.equals("h")) {
-                for (int i = 1; i < numHands; i++) {
-                    card = getCard(); // method to get the next card
-                    dealer.dealCard(card);
-                    dealtCards[i][2] = card;
-                    //int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
-
-                }
+                card = getCard(); // method to get the next card
+                dealer.dealCard(card);
+                dealtCards[1][2] = card;
+                Card thirdCard = dealtCards[handNumber][2];
+                currentHand.add(thirdCard);
+                int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
+                System.out.println(thirdCard.getDenomination() + " of " + thirdCard.getSuit() + ", " + "\t" + "\t" + "AndyPuff has " + playerScore + " points");
             } else if (choice.equals("s")) {
                 break;
             }
-        }*/
+        }
 
-        /*
-        for (int i = 0; i < numHands; i++) {
-            List<Card> currentHand = new ArrayList<Card>();
-            currentHand.add(dealtCards[i][0]);
-            currentHand.add(dealtCards[i][1]);
-            while (true) {
-                System.out.println("AndyPuff, do you want to hit or stand? (h/s)");
-                String choice = scanner.nextLine();
-                if (choice.equals("h")) {
-                    card = cards.get(cardIndex);
-                    currentHand.add(card);
-                    int playerScore = BlackjackScoreCalculator.calculateScore(currentHand);
-                    System.out.println("AndyPuff has been dealt the " + card.getDenomination() + " of " + card.getSuit());
-                    System.out.println("AndyPuff has " + playerScore + " points");
-                    if (playerScore > 21) {
-                        System.out.println("AndyPuff has busted.");
-                        break;
-                    }
-                    else if(playerScore == 21)
-                    {
-                        break;
-                    }
-                    cardIndex++;
-                }
-                else if (choice.equals("s")) {
-                    break;
-                }
-            }
-        }*/
     }
 }
 
